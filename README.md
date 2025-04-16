@@ -13,14 +13,11 @@ Esta é a API backend do projeto de previsão de prêmios para filmes, construí
 
 ---
 
-### 🚀 Instalação
+### 🚀 Instalação da API (Backend)
 
 ```bash
 # Clone o repositório
-git clone https://github.com/VBaldochi/Projeto_IMDBest
-cd Projeto_IMDBest
-
-# Instale as dependências
+cd backend
 npm install
 
 # Crie um arquivo .env com as seguintes variáveis:
@@ -108,27 +105,21 @@ Authorization: Bearer seu-jwt-token
 }
 ```
 
+> ⚠️ Filmes enviados ainda não concorreram a premiações. O sistema futuramente analisará esses dados para prever possíveis indicações e vitórias.
+
 ---
 
 #### 🏆 Premiações
 
 ##### `GET /api/premiacoes`
 
-Lista todas as premiações cadastradas.
+Lista todas as premiações cadastradas (Oscar, Globo de Ouro). Pode ser usada para determinar o último prêmio ocorrido.
 
-##### `POST /api/premiacoes` 🔐
-
-```json
-{
-  "ano": 2024,
-  "tipo": "Oscar",
-  "filmeVencedor": "Oppenheimer"
-}
-```
+> 🔒 A criação de premiações é uma funcionalidade administrativa e não está disponível publicamente via API.
 
 ---
 
-### 🛠 Tecnologias
+### 🛠 Tecnologias Backend
 
 - Node.js + Express
 - MongoDB + Mongoose
@@ -138,7 +129,43 @@ Lista todas as premiações cadastradas.
 
 ---
 
-### 📱 Frontend
+### 📱 App Mobile - .NET MAUI
 
-O app será desenvolvido em **.NET MAUI** e consumirá esta API.
+O aplicativo mobile será desenvolvido em **.NET MAUI**, com foco em:
+
+- Interface para login e cadastro de usuário
+- Tela de listagem dos filmes e seus dados (IMDB, duração, etc.)
+- Tela para envio de novos filmes para análise
+- Visualização das premiações e últimos vencedores
+
+#### Instalação do App
+
+```bash
+cd frontend
+# Abra no Visual Studio 2022 ou superior com suporte a MAUI
+```
+
+- Configure a plataforma desejada (Android, iOS, Windows)
+- Rode o projeto: `Run > Start Debugging`
+
+---
+
+### 📦 Estrutura do Projeto
+
+```
+raiz-do-projeto/
+├── backend/          # API Node.js (Express + MongoDB)
+├── frontend/         # App .NET MAUI
+├── README.md         # Este arquivo
+```
+
+---
+
+### 📬 Contato
+
+Dúvidas ou sugestões? Entre em contato com a equipe de desenvolvimento.
+
+---
+
+> Projeto acadêmico com fins de aprendizado. Utiliza dados públicos do IMDB, Oscar e Globo de Ouro.
 
