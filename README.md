@@ -129,26 +129,17 @@ Lista todas as premiações cadastradas (Oscar, Globo de Ouro). Pode ser usada p
 
 ---
 
-### 📱 App Mobile - .NET MAUI
+### 📱 App Mobile - FLUTTER
 
-O aplicativo mobile será desenvolvido em **.NET MAUI**, com foco em:
+O aplicativo mobile será desenvolvido em **FLUTTER**, com foco em:
 
 - Interface para login e cadastro de usuário
 - Tela de listagem dos filmes e seus dados (IMDB, duração, etc.)
-- Tela para envio de novos filmes para análise
 - Visualização das premiações e últimos vencedores
 
 #### Instalação do App
 
-```bash
-cd frontend
-# Abra no Visual Studio 2022 ou superior com suporte a MAUI
-```
 
-- Configure a plataforma desejada (Android, iOS, Windows)
-- Rode o projeto: `Run > Start Debugging`
-
----
 
 ### 📦 Estrutura do Projeto
 
