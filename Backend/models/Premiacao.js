@@ -1,11 +1,35 @@
 const mongoose = require('mongoose');
 
-const premiacaoSchema = new mongoose.Schema({
-  nome: String, // "Oscar" ou "Globo de Ouro"
-  ano: Number,
-  categoria: String,
-  vencedor: Boolean,
-  filme: String, // Nome do filme
-}, { timestamps: true });
+const PremiacaoSchema = new mongoose.Schema({
+  nome: { 
+    type: String, 
+    required: true,
+    enum: ['Oscar', 'Globo de Ouro', 'BAFTA', 'Outros'] 
+  },
+  ano: { 
+    type: Number, 
+    required: true,
+    min: 1929,
+    max: new Date().getFullYear() 
+  },
+  categoria: { 
+    type: String, 
+    required: true 
+  },
+  vencedor: { 
+    type: Boolean, 
+    required: true,
+    default: false 
+  },
+  filme: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Filme',
+    required: true 
+  },
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
+  }
+});
 
-module.exports = mongoose.model('Premiacao', premiacaoSchema);
+PremiacaoSchema.index({ nome: 1, ano: 1, categoria: 1 }, { unique: true });

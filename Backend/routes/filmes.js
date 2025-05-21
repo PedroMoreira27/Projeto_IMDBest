@@ -1,21 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const Filme = require("../models/Filme");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/authMiddleware");
+const controller = require("../controllers/filmes");
+const { validarCriacaoFilme } = require("../middleware/validarFilme");
+const { validarCriacaoPremiacao } = require("../middleware/validarPremiacao");
 
-router.get("/", async (req, res) => {
-  const filmes = await Filme.find();
-  res.json(filmes);
-});
+// Rotas de Filmes
+router.get("/", controller.listarFilmes);
+router.post("/", auth, validarCriacaoFilme, controller.criarFilme);
 
-router.post("/", auth, async (req, res) => {
-  try {
-    const novoFilme = new Filme(req.body);
-    await novoFilme.save();
-    res.status(201).json(novoFilme);
-  } catch (err) {
-    res.status(400).json({ erro: err.message });
-  }
-});
+// Rotas de Integração
+router.post("/verificar", auth, controller.verificarPremiacao);
+router.post("/classificar", auth, controller.classificarFilme);
+
+// Rotas de Premiações
+router.get("/premiacoes", controller.listarPremiacoes);
+router.post("/premiacoes", auth, validarCriacaoPremiacao, controller.criarPremiacao);
 
 module.exports = router;

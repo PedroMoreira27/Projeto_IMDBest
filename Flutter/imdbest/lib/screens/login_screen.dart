@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,22 +9,28 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _authService = AuthService();
   String email = '';
   String senha = '';
   bool carregando = false;
   String? erro;
 
   void _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
     setState(() {
       carregando = true;
       erro = null;
     });
-    await Future.delayed(const Duration(seconds: 1));
-    if (email == 'teste@teste.com' && senha == '123456') {
-      Navigator.pushReplacementNamed(context, '/main');
-    } else {
+
+    try {
+      final response = await _authService.login(email, senha);
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/main');
+      }
+    } catch (e) {
       setState(() {
-        erro = 'E-mail ou senha inválidos';
+        erro = e.toString();
         carregando = false;
       });
     }
@@ -88,9 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding: const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) _login();
-                              },
+                              onPressed: _login,
                             ),
                     ),
                     TextButton(

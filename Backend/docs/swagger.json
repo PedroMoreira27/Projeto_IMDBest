@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Filmes e Premiações API",
+    "version": "1.0.0",
+    "description": "API Node.js que gerencia filmes, premiações e integra com FastAPI para classificação."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Servidor de desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/filmes": {
+      "get": {
+        "summary": "Listar todos os filmes",
+        "responses": {
+          "200": {
+            "description": "Lista de filmes"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar novo filme",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Filme" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Filme criado com sucesso" },
+          "422": { "description": "Erro de validação" }
+        }
+      }
+    },
+    "/filmes/verificar": {
+      "post": {
+        "summary": "Verifica se um filme já possui premiação",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "year": { "type": "integer" }
+                },
+                "required": ["title", "year"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Resultado da verificação" }
+        }
+      }
+    },
+    "/filmes/classificar": {
+      "post": {
+        "summary": "Classifica um filme nas categorias desejadas",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "year": { "type": "integer" },
+                  "categorias": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "oscar_nominated",
+                        "oscar_winner",
+                        "globe_nominated",
+                        "globe_winner"
+                      ]
+                    }
+                  }
+                },
+                "required": ["title", "year", "categorias"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Resultado da classificação" }
+        }
+      }
+    },
+    "/filmes/premiacoes": {
+      "get": {
+        "summary": "Lista todas as premiações cadastradas",
+        "responses": {
+          "200": {
+            "description": "Lista de premiações"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria nova premiação manualmente",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Premiacao" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Premiação cadastrada com sucesso" },
+          "422": { "description": "Erro de validação" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Filme": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "year": { "type": "integer" },
+          "duration": { "type": "number" },
+          "MPA": { "type": "string" },
+          "rating": { "type": "number" },
+          "votes": { "type": "integer" },
+          "meta_score": { "type": "number" },
+          "description": { "type": "string" },
+          "movie_link": { "type": "string" },
+          "writers": { "type": "array", "items": { "type": "string" } },
+          "directors": { "type": "array", "items": { "type": "string" } },
+          "stars": { "type": "array", "items": { "type": "string" } },
+          "languages": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["title", "year"]
+      },
+      "Premiacao": {
+        "type": "object",
+        "properties": {
+          "nome": { "type": "string", "enum": ["Oscar", "Globo de Ouro"] },
+          "ano": { "type": "integer" },
+          "categoria": { "type": "string" },
+          "vencedor": { "type": "boolean" },
+          "filme": { "type": "string" }
+        },
+        "required": ["nome", "ano", "categoria", "vencedor", "filme"]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

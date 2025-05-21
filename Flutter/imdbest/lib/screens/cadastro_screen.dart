@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({super.key});
@@ -8,18 +9,32 @@ class CadastroScreen extends StatefulWidget {
 
 class _CadastroScreenState extends State<CadastroScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _authService = AuthService();
+  String nome = '';
   String email = '';
   String senha = '';
   String? erro;
   bool carregando = false;
 
   void _cadastrar() async {
+    if (!_formKey.currentState!.validate()) return;
+
     setState(() {
       carregando = true;
       erro = null;
     });
-    await Future.delayed(const Duration(seconds: 1));
-    Navigator.pushReplacementNamed(context, '/login');
+
+    try {
+      await _authService.registrar(nome, email, senha);
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    } catch (e) {
+      setState(() {
+        erro = e.toString();
+        carregando = false;
+      });
+    }
   }
 
   @override
@@ -43,6 +58,16 @@ class _CadastroScreenState extends State<CadastroScreen> {
                     const SizedBox(height: 16),
                     const Text('Criar Conta', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 24),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Nome',
+                        prefixIcon: Icon(Icons.person_outline),
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (v) => nome = v,
+                      validator: (v) => v != null && v.isNotEmpty ? null : 'Nome é obrigatório',
+                    ),
+                    const SizedBox(height: 16),
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'E-mail',
@@ -81,9 +106,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                                 padding: const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) _cadastrar();
-                              },
+                              onPressed: _cadastrar,
                             ),
                     ),
                     TextButton(
